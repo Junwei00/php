@@ -25,7 +25,7 @@
             include 'config/database.php';
             try {
                 // posted values
-                $username = $_POST['username'];
+                $email = $_POST['email'];
                 $password = $_POST['password'];
                 $firstname = $_POST['firstname'];
                 $lastname = $_POST['lastname'];
@@ -34,8 +34,8 @@
 
                 // Validation
                 $errors = [];
-                if (empty($username)) {
-                    $errors[] = "Username is required.";
+                if (empty($email)) {
+                    $errors[] = "Email is required.";
                 }
                 if (empty($password)) {
                     $errors[] = "Password is required.";
@@ -63,11 +63,11 @@
                     // Insert query
 
                     // insert query
-                    $query = "INSERT INTO customers SET username=:username, password=:password, firstname=:firstname,lastname=:lastname,gender=:gender,date_of_birth=:date_of_birth";
+                    $query = "INSERT INTO customers SET email=:email, password=:password, firstname=:firstname,lastname=:lastname,gender=:gender,date_of_birth=:date_of_birth";
                     // prepare query for execution
                     $stmt = $con->prepare($query);
                     // bind the parameters
-                    $stmt->bindParam(':username', $username);
+                    $stmt->bindParam(':email', $email);
                     $stmt->bindParam(':password', $password);
                     $stmt->bindParam(':firstname', $firstname);
                     $stmt->bindParam(':lastname', $lastname);
@@ -94,8 +94,8 @@
         <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>' method="post">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
-                    <td>Username</td>
-                    <td><input type='text' name='username' class='form-control' /></td>
+                    <td>Email</td>
+                    <td><input type='text' name='email' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>Password</td>
