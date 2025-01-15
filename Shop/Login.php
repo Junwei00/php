@@ -48,12 +48,10 @@
 
                 $errors = [];
 
-                // 验证字段是否为空
                 if (empty($email)) $errors[] = "Email is required.";
                 if (empty($password)) $errors[] = "Password is required.";
 
                 try {
-                    // 检查 Email 是否存在
                     if (empty($errors)) {
                         $check_query = "SELECT email FROM customer WHERE email = :email";
                         $stmt = $con->prepare($check_query);
@@ -65,30 +63,20 @@
                         }
                     }
 
-                    // 插入新用户
-                    if (empty($errors)) {
-                        $query = "INSERT INTO customer SET email=:email, password=:password";
-                        $stmt = $con->prepare($query);
-                        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-                        $stmt->bindParam(':email', $email);
-                        $stmt->bindParam(':password', $hashed_password);
-
-                        if ($stmt->execute()) {
-                            echo "<div class='alert alert-success'>User registered successfully.</div>";
-                        } else {
-                            echo "<div class='alert alert-danger'>Unable to save record.</div>";
-                        }
-                    } else {
+                    if (!empty($errors)) {
                         echo "<div class='alert alert-danger'><ul>";
                         foreach ($errors as $error) {
                             echo "<li>{$error}</li>";
                         }
                         echo "</ul></div>";
+                    } else {
+                        echo "<div class='alert alert-success'>Validation passed. Email does not exist in the database.</div>";
                     }
                 } catch (PDOException $exception) {
                     echo "<div class='alert alert-danger'>ERROR: " . $exception->getMessage() . "</div>";
                 }
             }
+            ?>
             ?>
             <img class="mb-4" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="" width="100"
                 height="100">
