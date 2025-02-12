@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+<?php include 'menu.php'; ?>
 
 <head>
     <title>PDO - Create a Record - PHP CRUD Tutorial</title>
@@ -33,9 +34,10 @@
                 $name = $_POST['name'];
                 $description = $_POST['description'];
                 $price = $_POST['price'];
-                $promotion_price = $_POST['promotion_price'];
+                $promotion_price = !empty($_POST['promotion_price']) ? $_POST['promotion_price'] : NULL;
                 $manufacture_date = $_POST['manufacture_date'];
                 $expired_date = $_POST['expired_date'];
+                $product_category = $_POST['product_cat'];
 
                 // Validation
                 $errors = [];
@@ -51,9 +53,6 @@
                 if (empty($manufacture_date)) {
                     $errors[] = "Manufacture date is required.";
                 }
-                if (empty($expired_date)) {
-                    $errors[] = "Expired date is required.";
-                }
                 // If there are errors, display them
                 if (!empty($errors)) {
                     echo "<div class='alert alert-danger'><ul>";
@@ -65,7 +64,7 @@
                     // Insert query
 
                     // insert query
-                    $query = "INSERT INTO products SET name=:name, description=:description, price=:price,manufacture_date=:manufacture_date,expired_date=:expired_date, created=:created";
+                    $query = "INSERT INTO products SET name=:name, description=:description, price=:price, promotion_price=:promotion_price, product_cat=:product_cat, manufacture_date=:manufacture_date,expired_date=:expired_date, created=:created";
                     // prepare query for execution
                     $stmt = $con->prepare($query);
                     // bind the parameters
@@ -73,10 +72,20 @@
                     $stmt->bindParam(':description', $description);
                     $stmt->bindParam(':price', $price);
                     $stmt->bindParam(':manufacture_date', $manufacture_date);
-                    $stmt->bindParam(':expired_date', $expired_date);
+                    $stmt->bindParam(':product_cat', $product_category);
+                    if (!empty($expired_date)) {
+                        $stmt->bindParam(':expired_date', $expired_date);
+                    } else {
+                        $stmt->bindValue(':expired_date', null, PDO::PARAM_NULL);
+                    }
                     // specify when this record was inserted to the database
                     $created = date('Y-m-d H:i:s');
                     $stmt->bindParam(':created', $created);
+                    if (!empty($promotion_price)) {
+                        $stmt->bindParam(':promotion_price', $promotion_price);
+                    } else {
+                        $stmt->bindValue(':promotion_price', null, PDO::PARAM_NULL);
+                    }
                     // Execute the query
                     if ($stmt->execute()) {
                         echo "<div class='alert alert-success'>Product was added.</div>";
@@ -111,7 +120,7 @@
                             <?php
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 extract($row);
-                                echo "<option value ='$product_cat_name'>$product_cat_name</option>";
+                                echo "<option value ='$product_cat_id'>$product_cat_name</option>";
                             }
                             ?>
                         </select>
@@ -121,12 +130,16 @@
                     <td>Price</td>
                     <td><input type='text' name='price' class='form-control' /></td>
                 </tr>
-                <td>Manufacture_date</td>
-                <td><input type='text' name='manufacture_date' class='form-control' /></td>
+                </tr>
+                <td>Promotion pirce</td>
+                <td><input type='text' name='promotion_price' class='form-control' /></td>
+                <tr>
+                    <td>Manufacture_date</td>
+                    <td><input type='date' name='manufacture_date' class='form-control' /></td>
                 <tr>
                 </tr>
                 <td>Expired_date</td>
-                <td><input type='text' name='expired_date' class='form-control' /></td>
+                <td><input type='date' name='expired_date' class='form-control' /></td>
                 <tr>
                     <td></td>
                     <td>
@@ -141,4 +154,4 @@
     <!-- end .container -->
 </body>
 
-</html>-
+</html>

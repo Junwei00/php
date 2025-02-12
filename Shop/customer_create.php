@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+<?php include 'menu.php'; ?>
 
 <head>
     <title>PDO - Create a Record - PHP CRUD Tutorial</title>
@@ -52,6 +53,13 @@
                 if (empty($date_of_birth)) {
                     $errors[] = "Date of birth is required.";
                 }
+                $checkQuery = "SELECT email FROM customers WHERE email = :email";
+                $checkStmt = $con->prepare($checkQuery);
+                $checkStmt->bindParam(':email', $email);
+                $checkStmt->execute();
+                if ($checkStmt->rowCount() > 0) {
+                    $errors[] = "Email already exists!";
+                }
                 // If there are errors, display them
                 if (!empty($errors)) {
                     echo "<div class='alert alert-danger'><ul>";
@@ -99,7 +107,7 @@
                 </tr>
                 <tr>
                     <td>Password</td>
-                    <td><input type='text' name='password' class='form-control'></td>
+                    <td><input type='password' name='password' class='form-control'></td>
                 </tr>
                 <tr>
                     <td>First Name</td>
@@ -125,7 +133,7 @@
                     <td></td>
                     <td>
                         <input type='submit' value='Create' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to create</a>
+                        <a href='customer_listing.php' class='btn btn-danger'>Back to create</a>
                     </td>
                 </tr>
             </table>

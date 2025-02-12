@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+<?php include 'menu.php'; ?>
 
 <head>
     <title>PDO - Read One Record - PHP CRUD Tutorial</title>
@@ -19,7 +20,7 @@
         <?php
         // get passed parameter value, in this case, the record ID
         // isset() is a PHP function used to verify if a value is there or not
-        $username = isset($_GET['username']) ? $_GET['username'] : die('ERROR: Record USERNAME not found.');
+        $email = isset($_GET['email']) ? $_GET['email'] : die('ERROR: Record EMAIL not found.');
 
         //include database connection
         include 'config/database.php';
@@ -27,11 +28,11 @@
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT username, firstname, lastname,gender ,date_of_birth FROM customers WHERE username = ? LIMIT 0,1";
+            $query = "SELECT email, firstname, lastname,gender ,date_of_birth FROM customers WHERE email = ? LIMIT 0,1";
             $stmt = $con->prepare($query);
 
             // this refer to the first question mark
-            $stmt->bindParam(1, $username);
+            $stmt->bindParam(1, $email);
 
             // execute our query
             $stmt->execute();
